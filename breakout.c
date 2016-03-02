@@ -30,6 +30,15 @@
 // radius of ball in pixels
 #define RADIUS 10
 
+#define YSPACE 10
+#define XSPACE 10
+
+
+// brick height & width
+#define BH 15
+#define BW 65
+
+
 // lives
 #define LIVES 3
 
@@ -89,7 +98,54 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
-    // TODO
+   // create an array for rows and cols to loop over
+    // Creates a new GRect with the specified bounds.
+    GRect rect[COLS][ROWS]; 
+   
+    // loop over the columns
+    for (int i = 0; i < COLS; i++)
+    {
+       // loop over the rows
+        for (int j = 0; j < ROWS; j++)
+        {
+            rect[i][j] = newGRect(BW * i + XSPACE * i + 1, 
+            BH * j + YSPACE * j + 6 * BH, BW, BH);
+          
+            switch (i)
+            {
+                case 0:
+                    setColor(rect[i][j], "BLUE");
+                    break; 
+            
+                case 1:
+                    setColor(rect[i][j], "RED");
+                    break; 
+              
+                case 2:
+                    setColor(rect[i][j], "ORANGE");
+                    break; 
+              
+                case 3:
+                    setColor(rect[i][j], "BLACK");
+                    break; 
+               
+                case 4: 
+                    setColor(rect[i][j], "GREEN");
+                    break; 
+                
+                default:
+                    return; 
+           }
+         
+            // add colors 
+            setFilled((rect[i][j]), true);
+            
+            // show it in the canvas
+            add(window, (rect[i][j])); 
+          
+       }
+   }
+
 }
 
 /**
