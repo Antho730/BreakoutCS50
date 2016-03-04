@@ -268,9 +268,13 @@ GRect initPaddle(GWindow window)
  */
 GLabel initScoreboard(GWindow window)
 {
-    // TODO
-    return NULL;
+    GLabel label = newGLabel(" ");
+    setFont(label, "SansSerif-50");
+    setColor(label, "BLUE");
+    add(window, label);
+    return label;
 }
+
 
 /**
  * Updates scoreboard's label, keeping it centered in window.
