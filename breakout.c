@@ -79,18 +79,106 @@ int main(void)
     // number of points initially
     int points = 0;
 
+    // ball speed
+    double xspeed =drand48() + 1.5;
+    double yspeed = 2.5;
+
+
     // keep playing until game over
     while (lives > 0 && bricks > 0)
-    {
-        // TODO
+    
+     {        
+        // Scoreboard
+        updateScoreboard(window, label, points);
+        
+        // move ball
+        move(ball, xspeed, yspeed);
+
+        pause(10);
+        
+        // listen for mouse event
+        GEvent event = getNextEvent(MOUSE_EVENT);
+        
+        // validation for an event
+        if (event != NULL)
+        {
+            if (getEventType(event) == MOUSE_MOVED)
+            {
+                // make sure paddle follows the mouse
+                double x = getX(event) - getWidth(paddle) / 2;
+                double y = HEIGHT - 100;
+                setLocation(paddle, x, y);
+            }
+        }
+        
+        
+        GObject object = detectCollision(window, ball);
+        
+        if (object != NULL)
+        {
+            // when ball strucks the paddle
+            if (object == paddle)
+            {
+                yspeed = -yspeed;
+            }
+            
+            // keep track of stats 
+            else if (strcmp(getType(object), "GRect") == 0)
+            {
+                removeGWindow(window, object);
+                yspeed = -yspeed;
+                points = points + 1;
+                bricks = bricks - 1;                
+            }
+        }
+        
+        
+        // when ball hits left wall
+        if (getX(ball) <= 0)
+        {
+            xspeed = -xspeed;
+        }
+        
+        // when the ball hits the top wall.
+        if (getY(ball) <= 0)
+        {
+            yspeed = -yspeed;
+        }
+   
+        // when ball hits the right wall
+        if (getX(ball) + getWidth(ball) >= 400)
+        {
+            xspeed = -xspeed;
+        }
+        
+        // bottom wall below paddle
+        if (getY(ball) + getHeight(ball) >= 600)
+        {
+            lives = lives - 1;
+            // reset
+            setLocation(ball, WIDTH / 2 - RADIUS, HEIGHT / 2 + RADIUS);
+            setLocation(paddle, 160, 500);
+            waitForClick();
+        }
+      
+        // end of game, winner!
+        if (points == 25)
+        {
+            GLabel win = newGLabel("You win !");
+            setFont(win, "SansSerif-50");
+            setColor(win, "BLACK");
+            setLocation(win, 15, 300);
+            add(window, win);
+       
+        }
+        
     }
 
-    // wait for click before exiting
-    waitForClick();
-
-    // game over
+     waitForClick();
+    
     closeGWindow(window);
     return 0;
+
 }
 
 /**
